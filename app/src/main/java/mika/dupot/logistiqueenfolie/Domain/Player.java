@@ -14,6 +14,7 @@ public class Player {
     protected int targetX=1;
     protected int targetY=1;
     protected int ticMovingTo=0;
+    protected int ticMovingNb=4;
 
     protected int rowUsing;
     protected int colUsing;
@@ -65,6 +66,9 @@ public class Player {
 
 
     }
+    public void setTicMovingNb(int ticMovingNb_){
+        ticMovingNb=ticMovingNb_;
+    }
 
     public int getX() {
         return x;
@@ -96,7 +100,7 @@ public class Player {
         ticMovingTo=0;
     }
     public void enableTicMovingTo(){
-        ticMovingTo=4;
+        ticMovingTo=ticMovingNb;
     }
     public void decreaseTicMovingTo(){
         ticMovingTo-=1;

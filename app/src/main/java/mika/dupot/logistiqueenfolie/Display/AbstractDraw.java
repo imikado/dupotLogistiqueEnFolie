@@ -41,15 +41,9 @@ public abstract class AbstractDraw {
         public void drawImageCoordPlusDelta(Canvas canvas, Bitmap image, int x, int y, int deltaX_){
 
             int x2=x*gridWidth+deltaX_;
-            // int y2=y*this.caseWidth;
-
-
             int y2 = (y * gridWidth);
-            int y3 = ((y-1) * gridWidth)+gridWidth;
 
-
-
-            canvas.drawBitmap(image,new Rect(0,0,spriteWidth,spriteHeight),new Rect(0+x2,0+y2,gridWidth+x2,gridWidth+y3),null);
+            canvas.drawBitmap(image,new Rect(0,0,spriteWidth,spriteHeight),new Rect(0+x2,0+y2,gridWidth+x2,gridWidth+y2),null);
 
         }
 

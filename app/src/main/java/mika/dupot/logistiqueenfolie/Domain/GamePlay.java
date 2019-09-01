@@ -1,8 +1,8 @@
 package mika.dupot.logistiqueenfolie.Domain;
 
-import android.util.ArrayMap;
 import android.util.Log;
 
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -64,7 +64,7 @@ public class GamePlay {
 
     public static final int ITEM_RACK = 1;
 
-    private ArrayMap<Integer, Integer> stockList;
+    private HashMap<Integer, Integer> stockList;
 
 
 
@@ -253,7 +253,7 @@ public class GamePlay {
 
         rackList=new ArrayList<Rack>();
 
-        stockList=new ArrayMap<Integer, Integer>();
+        stockList=new HashMap<Integer, Integer>();
         stockList.put(ITEM_CAMERA,0);
         stockList.put(ITEM_USBKEY,0);
         stockList.put(ITEM_TABLET,0);
@@ -822,8 +822,6 @@ public class GamePlay {
     public ArrayList<Draw> getRenderOrders(ArrayList<Draw> drawList_){
         ArrayList<Order> tOrder=getListOrder();
 
-        //int caseWidth=(getCaseWidth() /4);
-
         int x2=0;
         for(Order oOrder : tOrder){
 
@@ -882,7 +880,6 @@ public class GamePlay {
         if(getArrowPlayerPutObjectOnRack()!=null){
             drawList_.add(new Draw(Draw.TYPE_ARROWPUTONRACK,getArrowPlayerPutObjectOnRack().x,getArrowPlayerPutObjectOnRack().y));
         }
-
         if(getArrowPlayerCannotPutObjectInBox()!=null){
 
             drawList_.add(new Draw(Draw.TYPE_ARROWPUTINBOX,getArrowPlayerCannotPutObjectInBox().x,getArrowPlayerCannotPutObjectInBox().y));
