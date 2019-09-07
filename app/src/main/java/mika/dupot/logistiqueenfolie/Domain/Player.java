@@ -1,6 +1,7 @@
 package mika.dupot.logistiqueenfolie.Domain;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class Player {
 
@@ -96,9 +97,6 @@ public class Player {
 
         enableTicMovingTo();
     }
-    public void resetTicMovingTo(){
-        ticMovingTo=0;
-    }
     public void enableTicMovingTo(){
         ticMovingTo=ticMovingNb;
     }
@@ -163,52 +161,61 @@ public class Player {
     }
 
     public void processGoToTargetX(){
-        if(  x < targetX ) {
-            if(ticMovingTo==0) {
+        decreaseTicMovingTo();
+        if(ticMovingTo==0) {
+            if (x < targetX) {
+
                 x += 1;
 
-                analyzeGameContext();
-            }
-        }else if(  x > targetX ){
-            if(ticMovingTo==0) {
+            } else if (x > targetX) {
+
                 x -= 1;
 
-                analyzeGameContext();
             }
+            analyzeGameContext();
+
         }
     }
 
     public void processGoToTargetY(){
-        if(  y < targetY ) {
-            if(ticMovingTo==0) {
+        decreaseTicMovingTo();
+        if(ticMovingTo==0) {
+            if (y < targetY) {
+
                 y += 1;
 
-                analyzeGameContext();
-            }
-        }else if(  y > targetY ){
-            if(ticMovingTo==0) {
+            } else if (y > targetY) {
+
                 y -= 1;
 
-                analyzeGameContext();
             }
+            analyzeGameContext();
         }
+
     }
 
-    public void processBeforeDraw(){
-        if(shouldProcessPathList()==true){
-            if(x==targetX && y==targetY) {
+    public void processBeforeDrawing(){
+        if(shouldProcessPathList()){
 
+            if(x!=targetX || y!=targetY) {
+                if(shouldGoToTargetX() ){
+                    processGoToTargetX();
+                }else if(shouldGoToTargetY() ) {
+                    processGoToTargetY();
+                }
+            }else{
                 processPathPointList();
-            }else if(shouldGoToTargetX() ){
-                processGoToTargetX();
-            }else if(shouldGoToTargetY() ) {
-                processGoToTargetY();
+                if(shouldGoToTargetX() ){
+                    processGoToTargetX();
+                }else if(shouldGoToTargetY() ) {
+                    processGoToTargetY();
+                }
             }
-        }
-    }
 
-    public void processAfterDraw(){
-        decreaseTicMovingTo();
+
+        }
+
+
     }
 
     public int getColUsing() {
@@ -223,5 +230,16 @@ public class Player {
             return false;
         }
         return true;
+    }
+
+    public Draw getRenderDraw(){
+        Hashtable paramList=new Hashtable();
+        paramList.put(Draw.PARAM_TARGETX, getTargetX());
+        paramList.put(Draw.PARAM_TARGETY, getTargetY());
+        paramList.put(Draw.PARAM_TICMOVINGTO, getTicMovingTo());
+        paramList.put(Draw.PARAM_ROWUSING, getRowUsing());
+        paramList.put(Draw.PARAM_ITEM, getItem());
+
+        return new Draw(Draw.TYPE_PLAYER, getX(), getY(),paramList);
     }
 }

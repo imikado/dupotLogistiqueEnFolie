@@ -198,7 +198,6 @@ public class GamePlay {
     //game
     public void resetGame(){
 
-
         isAnimationBoxSucessRunning=false;
 
         nbLife=3;
@@ -303,52 +302,80 @@ public class GamePlay {
         return null;
     }
 
-    public String cycle() {
+    public boolean cycleBeforeDrawing(boolean oneSec_) {
 
         try {
 
-            nbCycleOrder++;
-            if(nbCycleOrder>6){
-                addNewOrder();
-                nbCycleOrder=0;
-            }
+            player.processBeforeDrawing();
 
+            if(oneSec_) {
 
-            isBeltRunning=false;
-
-            for(Box oBox: boxList){
-                oBox.render();
-                oBox.decreaseTimeLeft();
-
-                if(oBox.getTimeLeft()==0){
-
-                    Box boxToFail=oBox;
-
-                    enableAnimation(new Draw(Draw.TYPE_ANIMATION_BOX_FAILED,boxToFail.getX(),7));
-
-                    calculateDecreaseScoreFor(oBox);
+                nbCycleOrder++;
+                if (nbCycleOrder > 6) {
+                    addNewOrder();
+                    nbCycleOrder = 0;
                 }
 
-                if(oBox.isArrived()==false){
-                    isBeltRunning=true;
+            }
+
+
+            isBeltRunning = false;
+
+            ArrayList<Box> boxToRemove=new ArrayList<Box>();
+
+            for (Box oBox : boxList) {
+                oBox.processBeforeDrawing();
+                if(oneSec_) {
+                    oBox.decreaseTimeLeft();
+                }
+
+
+                if (oBox.getTimeLeft() == 0) {
+
+                    Box boxToFail = oBox;
+
+                    enableAnimation(new Draw(Draw.TYPE_ANIMATION_BOX_FAILED, boxToFail.getX(), 7));
+
+                    boxToRemove.add(oBox);
+                }
+
+                if (oBox.isArrived() == false) {
+                    isBeltRunning = true;
                 }
             }
 
+            for(Box oBoxToRemove: boxToRemove){
+                calculateDecreaseLifeFor(oBoxToRemove);
 
-
-            if(getNbLife()==0){
-                return "GAME_OVER";
             }
 
-            return "CONTINUE";
+
+            if (getNbLife() == 0) {
+                return false;
+            }
+
+
+
+            return true;
+
 
         }catch (Exception e){
             Log.e("GamePlay ERROR",e.toString());
+            Log.e("GamePlay ERROR",e.getStackTrace().toString());
 
-            return "ERROR";
+
+            return false;
+
          }
 
     }
+
+    /*
+    public void cycleAfterDrawing(){
+        player.processAfterDrawing();
+    }
+    */
+
     public Message onTouchCoord(int x_,int y_){
 
         Point arrowPlayerToTakeFromRack=getArrowPlayerTakeObjectFromRack();
@@ -533,8 +560,7 @@ public class GamePlay {
         }
     }
 
-    //score
-    public void calculateDecreaseScoreFor(Box oBoxToFail_) {
+    public void calculateDecreaseLifeFor(Box oBoxToFail_) {
         subLife();
 
         for(Order oOrderLoop: orderList){
@@ -601,6 +627,9 @@ public class GamePlay {
 
     //life
     private void subLife(){
+
+        Log.i("LIFE","-1");
+
         nbLife-=1;
 
         if(nbLife<0){
@@ -846,24 +875,15 @@ public class GamePlay {
         return drawList_;
     }
 
+    public Draw getRenderPlayer(){
+        return player.getRenderDraw();
+    }
+
     private ArrayList<Draw> getRenderPlayer(ArrayList<Draw> drawList_) {
 
 
-        Hashtable paramList=new Hashtable();
-        paramList.put(Draw.PARAM_TARGETX, player.getTargetX());
-        paramList.put(Draw.PARAM_TARGETY, player.getTargetY());
-        paramList.put(Draw.PARAM_TICMOVINGTO, player.getTicMovingTo());
-        paramList.put(Draw.PARAM_ROWUSING, player.getRowUsing());
-        paramList.put(Draw.PARAM_ITEM, player.getItem());
 
-
-        player.processBeforeDraw();
-
-        drawList_.add(new Draw(Draw.TYPE_PLAYER, player.getX(), player.getY(),paramList));
-
-        player.processAfterDraw();
-
-
+        drawList_.add( player.getRenderDraw()  );
 
         return drawList_;
     }

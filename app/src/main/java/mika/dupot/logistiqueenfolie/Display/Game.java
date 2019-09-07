@@ -98,35 +98,27 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback , Runnab
     public void render(Canvas canvas) {
         try {
 
-            if(!GamePlay.getInstance().animationIsRunning()) {
-                ticFps += 1;
-                if (ticFps >= GAME_FPS) {
-                    String status = GamePlay.getInstance().cycle();
-
-                    if (status.equals("GAME_OVER")) {
-
-                        gameOver();
-                    }/* else if (status.equals("ANIMATION_BOX_SUCCESS")) {
-                        isAnimationRunning = true;
-                    }*/
-
-                    ticFps = 0;
-                }
-            }
-
 
             if(GamePlay.getInstance().animationIsRunning()) {
 
                 Draw drawObject= GamePlay.getInstance().calculRenderAnimation();
 
+                ArrayList<Draw> newDrawList=new ArrayList<Draw>();
                 for(Draw previousDraw : previousDrawList){
                     if( (previousDraw.getType()==Draw.TYPE_BOX || previousDraw.getType()==Draw.TYPE_ARROWPUTINBOX) && previousDraw.getX()==drawObject.getX() && previousDraw.getY()==drawObject.getY()){
-                        previousDrawList.remove(previousDraw);
+                        //previousDrawList.remove(previousDraw);
+                    }else if(previousDraw.getType()==Draw.TYPE_PLAYER){
+                        //previousDrawList.remove(previousDraw);
+
+                    }else{
+                        newDrawList.add( previousDraw);
                     }
+
                 }
+                newDrawList.add(GamePlay.getInstance().getRenderPlayer());
 
                 super.draw(canvas);
-                printDrawList(canvas, previousDrawList);
+                printDrawList(canvas, newDrawList);
 
 
                 switch (drawObject.getType()) {
@@ -146,11 +138,24 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback , Runnab
 
             }else {
 
+                boolean oneSec=false;
+                ticFps += 1;
+                if (ticFps >= GAME_FPS) {
+                    oneSec=true;
+                    ticFps = 0;
+                }
+
+                if (!GamePlay.getInstance().cycleBeforeDrawing(oneSec) ) {
+                    gameOver();
+                }
+
                 super.draw(canvas);
                 ArrayList<Draw> drawList = GamePlay.getInstance().calculRender();
                 printDrawList(canvas, drawList);
-                
+
+
                 previousDrawList=drawList;
+
 
             }
 

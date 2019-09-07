@@ -39,11 +39,12 @@ public class GamePlayTest {
 
         //on cycle 7 fois pour avoir une premiere commande
         for(int i=0;i<7;i++) {
-            oGamePlay.cycle();
+            oGamePlay.cycleBeforeDrawing(true);
         }
 
         //on calcul le rendu du jeu
-        oGamePlay.calculRender();
+        oGamePlay.cycleBeforeDrawing(false);
+
         // pour verifier que le personnage est bien la
         assertEquals(0,oGamePlay.getPlayer().getX());
         assertEquals(6,oGamePlay.getPlayer().getY());
@@ -60,8 +61,7 @@ public class GamePlayTest {
 
         //on boucle 5 fois pour y arriver
         for(int i=0;i<4;i++) {
-            oGamePlay.calculRender();
-            oGamePlay.calculRender();
+            oGamePlay.cycleBeforeDrawing(false);
         }
         //on verifie qu'on est bien arrivé
         assertEquals(3,oGamePlay.getPlayer().getX());
@@ -79,16 +79,17 @@ public class GamePlayTest {
         //on se deplace jusqu'au carton de la commande
         oGamePlay.onTouchCoord(5,6);
         //on laisse les 5 etapes pour y arriver
-        for(int i=0;i<4;i++) {
-            oGamePlay.calculRender();
-            oGamePlay.calculRender();
+        for(int i=0;i<3;i++) {
+            oGamePlay.cycleBeforeDrawing(false);
         }
         //on verifie qu'on est arrivé
         assertEquals(5,oGamePlay.getPlayer().getX());
         assertEquals(6,oGamePlay.getPlayer().getY());
-        //on laisse le temps à l'animation de faire arriver notre carton
-        for(int i=0;i<8;i++) {
-            oGamePlay.cycle();
+        //on desactive l'animation sur le carton
+        oGamePlay.getBoxAtX(5).setTicLeftNb(0);
+        //on laisse le temps a notre carton pour arriver, en 5 cycles
+        for(int i=0;i<4;i++) {
+            oGamePlay.cycleBeforeDrawing(false);
         }
         //on verifie qu'il est bien arrive en coordonnee 5
         assertEquals(5,oGamePlay.getBoxAtX(5).getX());

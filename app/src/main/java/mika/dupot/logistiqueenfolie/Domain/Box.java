@@ -18,6 +18,7 @@ public class Box {
     protected int targetX;
 
     protected int ticLeft=4;
+    protected int ticLeftNb=5;
 
     public Box(int orderId_,ArrayList<Integer> orderItemList_, int x_,int y_,int targetX_){
         
@@ -47,10 +48,14 @@ public class Box {
         return ticLeft;
     }
 
-    public void render(){
+    public void setTicLeftNb(int ticLeftNb_){
+        ticLeftNb=ticLeftNb_;
+    }
+
+    public void processBeforeDrawing() {
         if(x<targetX){
             ticLeft++;
-            if(ticLeft>4){
+            if(ticLeft>=ticLeftNb){
                 ticLeft=0;
                 x++;
 
@@ -62,6 +67,11 @@ public class Box {
         if(x>targetX){
             x=targetX;
         }
+
+    }
+
+    public void render(){
+
     }
 
     public boolean isArrived(){
