@@ -97,7 +97,7 @@ public class Player {
 
         Bitmap imageSprite=getCurrentMoveBitmap();
 
-        canvas.drawBitmap(imageSprite,new Rect(0,0,spriteWidth,spriteHeight),new Rect(0+x2,0+y2,gridWidth+x2,gridWidth+y2),null);
+        canvas.drawBitmap(imageSprite,new Rect(0,0,spriteWidth,spriteHeight),new Rect(x2,y2,gridWidth+x2,gridWidth+y2),null);
 
 
         ticSprite++;
@@ -120,14 +120,18 @@ public class Player {
 
     public void drawImageCoord(Canvas canvas,Bitmap bitmap,int x, int y,int spriteMoveX_,int spriteMoveY_){
         int x2=x*gridWidth;
+        int y2 = (y * gridWidth)+decalageY/4;
 
         if(rowUsing==SPRITE_LEFT){
-            x2-=decalageY;
+            x2-=(decalageY/2);
         }else if(rowUsing==SPRITE_RIGHT){
-            x2+=decalageY;
+            x2+=(decalageY/2);
         }
 
-        int y2 = (y * gridWidth)+decalageY/4;
+        if(rowUsing==SPRITE_UP){
+            y2-=(decalageY*2);
+        }
+
 
         if(colUsing==1 || colUsing==3){
             y2+=decalageY/6;
@@ -138,7 +142,7 @@ public class Player {
         y2+=spriteMoveY_;
 
 
-        canvas.drawBitmap(bitmap,new Rect(0,0,spriteWidth,spriteHeight),new Rect(0+x2,0+y2,gridWidth+x2,gridWidth+y2),null);
+        canvas.drawBitmap(bitmap,new Rect(0,0,spriteWidth,spriteHeight),new Rect(x2,y2,gridWidth+x2,gridWidth+y2),null);
 
     }
 
