@@ -77,7 +77,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback , Runnab
     public static boolean isAnimationRunning=false;
     private ArrayList<Draw> previousDrawList;
 
-
     public Game(Context context) {
         super(context);
 
@@ -85,6 +84,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback , Runnab
         holder.addCallback(this);
         setFocusable(true);
 
+    }
+
+    public void enableDisableDisplayPathPoint(boolean displayPathPoint_){
+
+        GamePlay.getInstance().enableDisableDisplayPathPoint(displayPathPoint_);
+    }
+    public void setLevelDifficulty(int levelDifficulty_){
+        GamePlay.getInstance().setLevelDifficulty(levelDifficulty_);
     }
 
     public void gameOver(){
@@ -99,7 +106,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback , Runnab
         try {
 
 
-            if(GamePlay.getInstance().animationIsRunning()) {
+            if(GamePlay.getInstance().animationIsRunning() & previousDrawList!=null) {
 
                 Draw drawObject= GamePlay.getInstance().calculRenderAnimation();
 
@@ -421,9 +428,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback , Runnab
         //this.oAnimBoxSuccess=new Animation(this.getBitmapImage(R.drawable.animation_box_success),4,screenWidth,scaledDensity);
 
 
-        this.oAnimBoxSuccess=new Animation(this.getBitmapImage(R.drawable.box_filled_sprites),7,gridWidth);
+        this.oAnimBoxSuccess=new Animation(this.getBitmapImage(R.drawable.box_filled_sprites),6,gridWidth);
 
-        this.oAnimBoxFailed=new Animation(this.getBitmapImage(R.drawable.box_failed_sprites),7,gridWidth);
+        this.oAnimBoxFailed=new Animation(this.getBitmapImage(R.drawable.box_failed_sprites),6,gridWidth);
 
 
         if (drawThread != null){

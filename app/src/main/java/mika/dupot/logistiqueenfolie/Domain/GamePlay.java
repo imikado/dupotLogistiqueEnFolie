@@ -87,6 +87,7 @@ public class GamePlay {
 
     private int nbLife;
     private int level=1;
+    private int levelDifficulty=1;
     private int nbCycleOrder=0;
 
     private Player player;
@@ -105,6 +106,7 @@ public class GamePlay {
 
     private int ticAnimation=0;
     private Draw pendingAnimation;
+    private boolean displayPathPoint;
 
 
     //instance
@@ -311,7 +313,7 @@ public class GamePlay {
             if(oneSec_) {
 
                 nbCycleOrder++;
-                if (nbCycleOrder > 6) {
+                if (nbCycleOrder > 5) {
                     addNewOrder();
                     nbCycleOrder = 0;
                 }
@@ -594,13 +596,34 @@ public class GamePlay {
         updateBoxList();
 
 
-        if(iScore <50){
-            level=1;
-        }else if(iScore <150){
-            level=2;
-        }else if(iScore <250){
-            level=3;
+        if(levelDifficulty==1){
+            if(iScore <55){
+                level=1;
+            }else if(iScore <450){
+                level=2;
+            }else{
+                level=3;
+            }
+        }else if(levelDifficulty==2){
+            if(iScore <15){
+                level=1;
+            }else if(iScore <150){
+                level=2;
+            }else{
+                level=3;
+            }
+
+        }else if(levelDifficulty==3){
+            if(iScore <1){
+                level=1;
+            }else if(iScore <50){
+                level=2;
+            }else{
+                level=3;
+            }
         }
+
+
 
 
         return scoreBox;
@@ -650,10 +673,8 @@ public class GamePlay {
 
             if (currentTemplateType == 0){
                 tItemNewOrder.add(3);
-
             }else if (currentTemplateType == 1){
                 tItemNewOrder.add(2);
-
             }else if (currentTemplateType == 2){
                 tItemNewOrder.add(1);
             }else if (currentTemplateType == 3){
@@ -665,11 +686,9 @@ public class GamePlay {
             if (currentTemplateType == 0){
                 tItemNewOrder.add(3);
                 tItemNewOrder.add(1);
-
             }else if (currentTemplateType == 1){
                 tItemNewOrder.add(1);
                 tItemNewOrder.add(2);
-
             }else if (currentTemplateType == 2){
                 tItemNewOrder.add(3);
             }else if (currentTemplateType == 3){
@@ -683,11 +702,9 @@ public class GamePlay {
                 tItemNewOrder.add(3);
                 tItemNewOrder.add(1);
                 tItemNewOrder.add(2);
-
             }else if (currentTemplateType == 1){
                 tItemNewOrder.add(1);
                 tItemNewOrder.add(3);
-
             }else if (currentTemplateType == 2){
                 tItemNewOrder.add(3);
                 tItemNewOrder.add(2);
@@ -728,7 +745,9 @@ public class GamePlay {
 
         drawList=getRenderMap(drawList);
 
-        drawList=getRenderPath(drawList);
+        if(displayPathPoint) {
+            drawList = getRenderPath(drawList);
+        }
 
         drawList=getRenderOrders(drawList);
 
@@ -1092,5 +1111,13 @@ public class GamePlay {
     }
     public Point getArrowPlayerCannotPutObjectInBox(){
         return arrowPlayerCannotPutObjectInBox;
+    }
+
+    public void enableDisableDisplayPathPoint(boolean displayPathPoint_) {
+        displayPathPoint=displayPathPoint_;
+    }
+
+    public void setLevelDifficulty(int levelDifficulty_){
+        levelDifficulty=levelDifficulty_;
     }
 }
